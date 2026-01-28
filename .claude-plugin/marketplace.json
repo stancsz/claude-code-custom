@@ -145,6 +145,17 @@
       },
       "source": "./plugins/security-guidance",
       "category": "security"
+    },
+    {
+      "name": "better-tools",
+      "description": "Enhanced tooling for Claude Code including ripgrep-anchored search contexts and atomic diff mutations.",
+      "version": "1.0.0",
+      "author": {
+        "name": "User",
+        "email": "user@example.com"
+      },
+      "source": "./plugins/better-tools",
+      "category": "productivity"
     }
   ]
 }

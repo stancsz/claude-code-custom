@@ -1,0 +1,29 @@
+{
+    "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+    "name": "better-tools",
+    "version": "1.0.0",
+    "description": "Enhanced tooling for Claude Code including ripgrep-anchored search contexts and atomic diff mutations.",
+    "commands": [
+        {
+            "name": "atomic-edit",
+            "description": "Apply a search/replace edit to a file with strict verification.",
+            "usage": "/atomic-edit <file> <<EOF\n<<<<<<< SEARCH\n...\n=======\n...\n>>>>>>> REPLACE\nEOF",
+            "script": "python scripts/atomic_edit.py"
+        },
+        {
+            "name": "smart-search",
+            "description": "Search using ripgrep with context anchors.",
+            "usage": "/smart-search <pattern> [path]",
+            "script": "python scripts/smart_search.py"
+        }
+    ],
+    "permissions": {
+        "filesystem": [
+            "read",
+            "write"
+        ],
+        "shell": [
+            "execute"
+        ]
+    }
+}
