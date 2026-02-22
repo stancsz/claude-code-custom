@@ -19,7 +19,7 @@ This directory contains scripts to run Claude Code with LiteLLM using an OpenAI 
    ```bash
    ./start_claude_proxy.sh
    ```
-   This starts LiteLLM on port 4001 and a shim on port 4000 to handle API compatibility.
+   This starts LiteLLM on port 4000 to handle API compatibility.
    By default, it uses the `gpt-5.2-codex` model.
 
 2. Run Claude Code:
@@ -39,4 +39,3 @@ This directory contains scripts to run Claude Code with LiteLLM using an OpenAI 
 ## Configuration
 
 - `claude_litellm_config.yaml`: Maps Claude models to the target OpenAI model (`gpt-5.2-codex`).
-- `claude_litellm_shim.py`: Intercepts requests to clamp `max_tokens` parameter (to 4096) which is often set too high by Claude CLI for OpenAI models.
