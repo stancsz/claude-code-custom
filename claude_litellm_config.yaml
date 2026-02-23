@@ -1,0 +1,6 @@
+litellm_settings:
+  drop_params: true
+model_list:
+  - model_name: claude*
+    litellm_params:
+      model: gpt-5.2-codex
