@@ -4,3 +4,4 @@ model_list:
   - model_name: claude*
     litellm_params:
       model: gpt-5.2-codex
+      api_key: os.environ/OPENAI_API_KEY
