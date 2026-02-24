@@ -13,13 +13,13 @@ if [ -z "$OPENAI_API_KEY" ] && [ -n "$openai_api_key" ]; then
 fi
 export OPENAI_API_KEY
 # Start LiteLLM on port 4000 directly
-LITELLM_BIN="litellm"
-if [ -x ".venv312/bin/litellm" ]; then
-  LITELLM_BIN=".venv312/bin/litellm"
-elif [ -x ".venv/bin/litellm" ]; then
-  LITELLM_BIN=".venv/bin/litellm"
+PYTHON_BIN="python3"
+if [ -x ".venv312/bin/python3" ]; then
+  PYTHON_BIN=".venv312/bin/python3"
+elif [ -x ".venv/bin/python3" ]; then
+  PYTHON_BIN=".venv/bin/python3"
 fi
-nohup "$LITELLM_BIN" --config claude_litellm_config.yaml --port 4000 --telemetry False > litellm.log 2>&1 &
+nohup "$PYTHON_BIN" proxy_server.py > litellm.log 2>&1 &
 LITELLM_PID=$!
 echo "LiteLLM started with PID $LITELLM_PID"
 echo $LITELLM_PID > litellm.pid
