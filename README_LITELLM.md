@@ -12,6 +12,7 @@ This directory contains scripts to run Claude Code with LiteLLM using an OpenAI 
 2. Ensure you have `claude` (Claude Code) installed.
 
 3. Ensure `OPENAI_API_KEY` is set in your environment.
+   The proxy uses the Anthropic-compatible endpoint at `http://localhost:4000`.
 
 ## Usage
 
