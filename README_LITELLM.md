@@ -4,14 +4,20 @@ This directory contains scripts to run Claude Code with LiteLLM using an OpenAI 
 
 ## Setup
 
-1. Ensure you have `litellm` installed:
+1. Create a virtual environment (optional but recommended):
    ```bash
-   pip install 'litellm[proxy]'
+   python3 -m venv .venv
+   source .venv/bin/activate
    ```
 
-2. Ensure you have `claude` (Claude Code) installed.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Ensure `OPENAI_API_KEY` is set in your environment.
+3. Ensure you have `claude` (Claude Code) installed.
+
+4. Ensure `OPENAI_API_KEY` is set in your environment.
    The proxy uses the Anthropic-compatible endpoint at `http://localhost:4000`.
 
 ## Usage
