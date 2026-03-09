@@ -13,4 +13,20 @@ unset ANTHROPIC_API_KEY
 if [ -z "$OPENAI_API_KEY" ] && [ -n "$openai_api_key" ]; then
   export OPENAI_API_KEY="$openai_api_key"
 fi
-claude "$@"
+
+# Default to fully non-interactive permissions unless caller explicitly sets one.
+HAS_PERMISSION_FLAG=false
+for arg in "$@"; do
+  case "$arg" in
+    --dangerously-skip-permissions|--permission-mode|--permission-mode=*)
+      HAS_PERMISSION_FLAG=true
+      break
+      ;;
+  esac
+done
+
+if [ "$HAS_PERMISSION_FLAG" = true ]; then
+  claude "$@"
+else
+  claude --dangerously-skip-permissions "$@"
+fi

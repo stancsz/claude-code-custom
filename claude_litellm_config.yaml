@@ -3,5 +3,5 @@ litellm_settings:
 model_list:
   - model_name: claude*
     litellm_params:
-      model: gpt-5.2-codex
+      model: gpt-codex-5.3
       api_key: os.environ/OPENAI_API_KEY
