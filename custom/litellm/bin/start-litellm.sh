@@ -16,10 +16,10 @@ echo "  export OPENAI_API_KEY=sk-..."
 echo "  export ANTHROPIC_API_KEY=sk-ant-..."
 echo ""
 echo "Usage: ./custom/litellm/bin/start-litellm.sh [model]"
-echo "Example: ./custom/litellm/bin/start-litellm.sh gpt-5.1-codex"
+echo "Example: ./custom/litellm/bin/start-litellm.sh gpt-5.3-codex"
 echo ""
 
-MODEL=${1:-gpt-5.1-codex}
+MODEL=${1:-gpt-5.3-codex}
 
 echo "Proxying to model: $MODEL"
 echo "You can now run 'claude' in another terminal."

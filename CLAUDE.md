@@ -53,6 +53,47 @@ Execute in order from repo root:
 - Check status using skill script.
 - Stop proxy when done.
 
+## Runtime Setup (OPENAI key + start proxy + run Claude)
+
+Use these exact steps when the user asks to run Claude Code through the custom LiteLLM setup.
+
+### 1) Set `OPENAI_API_KEY`
+
+Preferred options (do not print secret values):
+
+- Shell env (current session):
+  - `export OPENAI_API_KEY='<your_key>'`
+- Project env file:
+  - Create `custom/litellm/config/.env` from `custom/litellm/config/.env.example`
+  - Add: `OPENAI_API_KEY=<your_key>`
+- User-level fallback:
+  - `~/.config/claude-code-litellm.env` with `OPENAI_API_KEY=<your_key>`
+
+### 2) Start LiteLLM (choose one mode)
+
+- Mode A: custom Python proxy on port `4001`
+  - `bash custom/litellm/bin/start_claude_proxy.sh`
+  - Runs `custom/litellm/src/proxy_server.py`
+
+- Mode B: LiteLLM CLI proxy on port `4000` (wrapper-compatible)
+  - `bash custom/litellm/bin/start-litellm.sh [model]`
+  - Example: `bash custom/litellm/bin/start-litellm.sh gpt-5.3-codex`
+
+### 3) Start Claude Code with proxy
+
+- If using Mode B (port `4000`), use wrapper:
+  - `bash custom/litellm/bin/run_claude_with_proxy.sh [claude args]`
+
+- If using Mode A (port `4001`), run Claude directly:
+  - `ANTHROPIC_BASE_URL=http://localhost:4001 claude [args]`
+
+### 4) Stop proxy
+
+- For Mode A:
+  - `bash custom/litellm/bin/stop_claude_proxy.sh`
+- For Mode B:
+  - Stop the foreground `start-litellm.sh` process with `Ctrl+C`
+
 ## Required Progress/Status Reporting
 
 Provide user-facing updates at each phase:

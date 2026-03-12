@@ -51,7 +51,7 @@ This folder contains custom LiteLLM integration files for Claude Code.
 
 ## Configuration
 
-- `config/claude_litellm_config.yaml`: maps Claude models to a target OpenAI model.
+- `config/claude_litellm_config.yaml`: maps Claude models to a target OpenAI model (default: `gpt-5.3-codex`).
 - `config/.env.example`: template for environment variables.
 
 ## Tracking
