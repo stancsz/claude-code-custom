@@ -17,11 +17,7 @@ This plugin adds enhanced tooling capabilities to Claude Code, specifically focu
 The command reads from Standard Input (stdin). 
 Format:
 ```
-<<<<<<< SEARCH
-[Exact content to find]
-=======
 [New content to replace with]
->>>>>>> REPLACE
 ```
 
 ## Setup
@@ -32,4 +28,14 @@ Format:
 ## LiteLLM Integration
 To use this with LiteLLM:
 1. Configure `.env` using `.env.example` as a template.
-2. Run `scripts/start-litellm.sh`.
+2. Run `custom/litellm/bin/start-litellm.sh`.
+
+## LiteLLM Skill
+
+This plugin now includes a skill at `skills/litellm-proxy/` for running Claude Code through a local LiteLLM proxy.
+
+Typical flow:
+1. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/check_prereqs.sh`
+2. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/start_proxy.sh`
+3. `bash custom/litellm/bin/run_claude_with_proxy.sh [claude args]`
+4. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/stop_proxy.sh`

@@ -70,17 +70,3 @@ See our [data usage policies](https://code.claude.com/docs/en/data-usage).
 We have implemented several safeguards to protect your data, including limited retention periods for sensitive information, restricted access to user session data, and clear policies against using feedback for model training.
 
 For full details, please review our [Commercial Terms of Service](https://www.anthropic.com/legal/commercial-terms) and [Privacy Policy](https://www.anthropic.com/legal/privacy).
-
-## LiteLLM Integration
-
-You can use [LiteLLM](https://docs.litellm.ai/docs/) to proxy Claude Code requests to other LLMs (e.g. OpenAI, Azure, LOCAL, etc).
-
-1. Ensure you have rebuilt the devcontainer to install LiteLLM.
-2. Provide your API keys as environment variables in `.devcontainer/devcontainer.json` or export them in your shell.
-3. Start the LiteLLM proxy:
-   ```bash
-   ./scripts/start-litellm.sh [target_model]
-   # Example: ./scripts/start-litellm.sh gpt-5.1-codex
-   ```
-4. The `.devcontainer/devcontainer.json` is pre-configured with `ANTHROPIC_BASE_URL=http://localhost:4000/anthropic` to route requests to the proxy.
-

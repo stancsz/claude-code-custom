@@ -1,7 +1,2 @@
 .DS_Store
 
-# Local env/venv + runtime artifacts
-.venv/
-.venv312/
-litellm.log
-litellm.pid

@@ -1,0 +1,19 @@
+components:
+  - name: litellm-bridge
+    type: integration
+    path: custom/litellm
+    owner: local
+    description: LiteLLM proxy and wrapper scripts for Claude Code routing.
+
+  - name: better-tools
+    type: plugin
+    path: custom/plugins/better-tools
+    owner: local
+    description: Utility plugin with search/edit commands and local skills.
+
+  - name: litellm-proxy
+    type: skill
+    plugin: better-tools
+    path: custom/plugins/better-tools/skills/litellm-proxy
+    owner: local
+    description: Workflow and scripts to start/stop/status LiteLLM proxy.
