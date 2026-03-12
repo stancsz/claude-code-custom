@@ -1,8 +1,20 @@
-# Claude Code
+# Claude Code Custom
+
+> [!TIP]
+> Use [`CLAUDE.md`](./CLAUDE.md) for custom install/validation steps.
+> This repo enables LiteLLM (`custom/litellm`) and Better Tools (`custom/plugins/better-tools`).
+> Inventory: [`custom/components.yaml`](./custom/components.yaml).
+>
+> ```text
+> prompt: 
+> Follow CLAUDE.md to install and validate all custom components from custom/, then report phase-by-phase status.
+> ```
 
 ![](https://img.shields.io/badge/Node.js-18%2B-brightgreen?style=flat-square) [![npm]](https://www.npmjs.com/package/@anthropic-ai/claude-code)
 
 [npm]: https://img.shields.io/npm/v/@anthropic-ai/claude-code.svg?style=flat-square
+
+Claude Code Custom is a customized Claude Code repository with local integrations, plugins, and skills under `custom/`, including LiteLLM proxy routing and the Better Tools plugin.
 
 Claude Code is an agentic coding tool that lives in your terminal, understands your codebase, and helps you code faster by executing routine tasks, explaining complex code, and handling git workflows -- all through natural language commands. Use it in your terminal, IDE, or tag @claude on Github.
 
