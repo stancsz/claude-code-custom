@@ -37,9 +37,9 @@ Execute in order from repo root:
 
 5. Validate runtime scripts
 - Verify executable scripts:
-  - `custom/litellm/bin/start_claude_proxy.sh`
-  - `custom/litellm/bin/run_claude_with_proxy.sh`
-  - `custom/litellm/bin/stop_claude_proxy.sh`
+  - `custom/litellm/bin/start-litellm-proxy.sh`
+  - `custom/litellm/bin/run-claude-custom.sh`
+  - `custom/litellm/bin/stop-litellm-proxy.sh`
 - Run shell syntax checks (`bash -n`) for all scripts in `custom/litellm/bin/`.
 
 6. Validate skill presence
@@ -49,7 +49,7 @@ Execute in order from repo root:
   - `custom/plugins/better-tools/skills/litellm-proxy/scripts/`
 
 7. Optional smoke test (only if user requests start/test)
-- Start proxy: `custom/litellm/bin/start_claude_proxy.sh`
+- Start proxy: `custom/litellm/bin/start-litellm-proxy.sh`
 - Check status using skill script.
 - Stop proxy when done.
 
@@ -72,17 +72,17 @@ Preferred options (do not print secret values):
 ### 2) Start LiteLLM (choose one mode)
 
 - Mode A: custom Python proxy on port `4001`
-  - `bash custom/litellm/bin/start_claude_proxy.sh`
+  - `bash custom/litellm/bin/start-litellm-proxy.sh`
   - Runs `custom/litellm/src/proxy_server.py`
 
 - Mode B: LiteLLM CLI proxy on port `4000` (wrapper-compatible)
-  - `bash custom/litellm/bin/start-litellm.sh [model]`
-  - Example: `bash custom/litellm/bin/start-litellm.sh gpt-5.3-codex`
+  - `bash custom/litellm/bin/start-litellm-cli-proxy.sh [model]`
+  - Example: `bash custom/litellm/bin/start-litellm-cli-proxy.sh gpt-5.3-codex`
 
 ### 3) Start Claude Code with proxy
 
 - If using Mode B (port `4000`), use wrapper:
-  - `bash custom/litellm/bin/run_claude_with_proxy.sh [claude args]`
+  - `bash custom/litellm/bin/run-claude-custom.sh [claude args]`
 
 - If using Mode A (port `4001`), run Claude directly:
   - `ANTHROPIC_BASE_URL=http://localhost:4001 claude [args]`
@@ -90,9 +90,59 @@ Preferred options (do not print secret values):
 ### 4) Stop proxy
 
 - For Mode A:
-  - `bash custom/litellm/bin/stop_claude_proxy.sh`
+  - `bash custom/litellm/bin/stop-litellm-proxy.sh`
 - For Mode B:
-  - Stop the foreground `start-litellm.sh` process with `Ctrl+C`
+  - Stop the foreground `start-litellm-cli-proxy.sh` process with `Ctrl+C`
+
+## Optional Launcher: `claude-custom`
+
+Strongly recommend this launcher whenever the user asks to run Claude Code with LiteLLM, even if they did not explicitly ask for an alias.
+
+Suggested wording:
+- `Strongly recommended: add a claude-custom launcher so future runs are one command and auto-wire LiteLLM + OPENAI_API_KEY.`
+- `I can set this up now in ~/.local/bin and PATH.`
+
+If the user agrees, set up a PATH launcher script (preferred over shell alias-only).
+
+### Setup steps
+
+1. Create `~/.local/bin/claude-custom` (or `~/bin/claude-custom`) with executable permissions.
+2. Ensure that directory is on `PATH` in shell profile (`~/.zshrc` or `~/.bashrc`).
+3. Launcher behavior must:
+   - Use `OPENAI_API_KEY` from current environment if set.
+   - Otherwise load `custom/litellm/config/.env` from this repo.
+   - Start LiteLLM proxy if not already listening on port `4001`.
+   - Run Claude with `ANTHROPIC_BASE_URL=http://localhost:4001`.
+
+### Launcher template
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="/absolute/path/to/claude-code-litellm"
+CALLER_DIR="$PWD"
+
+if [ -z "${OPENAI_API_KEY:-}" ] && [ -f "$REPO_ROOT/custom/litellm/config/.env" ]; then
+  set -a
+  . "$REPO_ROOT/custom/litellm/config/.env"
+  set +a
+fi
+
+if ! lsof -iTCP:4001 -sTCP:LISTEN -n -P >/dev/null 2>&1; then
+  (cd "$REPO_ROOT" && bash custom/litellm/bin/start-litellm-proxy.sh)
+  sleep 5
+fi
+
+cd "$CALLER_DIR"
+ANTHROPIC_BASE_URL=http://localhost:4001 claude "$@"
+```
+
+### PATH snippet example
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
 
 ## Required Progress/Status Reporting
 

@@ -9,8 +9,8 @@ if [ ! -f custom/litellm/requirements.txt ]; then
   exit 1
 fi
 
-if [ ! -f custom/litellm/bin/start_claude_proxy.sh ]; then
-  echo "Missing custom/litellm/bin/start_claude_proxy.sh"
+if [ ! -f custom/litellm/bin/start-litellm-proxy.sh ]; then
+  echo "Missing custom/litellm/bin/start-litellm-proxy.sh"
   exit 1
 fi
 

@@ -32,21 +32,21 @@ This folder contains custom LiteLLM integration files for Claude Code.
 
 1. Start the proxy:
    ```bash
-   ./custom/litellm/bin/start_claude_proxy.sh
+   ./custom/litellm/bin/start-litellm-proxy.sh
    ```
 
 2. Run Claude Code:
    ```bash
-   ./custom/litellm/bin/run_claude_with_proxy.sh [arguments]
+   ./custom/litellm/bin/run-claude-custom.sh [arguments]
    ```
    Example:
    ```bash
-   ./custom/litellm/bin/run_claude_with_proxy.sh -p "Hello world"
+   ./custom/litellm/bin/run-claude-custom.sh -p "Hello world"
    ```
 
 3. Stop the proxy:
    ```bash
-   ./custom/litellm/bin/stop_claude_proxy.sh
+   ./custom/litellm/bin/stop-litellm-proxy.sh
    ```
 
 ## Configuration

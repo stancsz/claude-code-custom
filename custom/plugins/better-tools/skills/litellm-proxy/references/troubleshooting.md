@@ -9,7 +9,7 @@
 ## Claude cannot connect
 
 - Ensure proxy is up: `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/status_proxy.sh`
-- Ensure wrapper script is used: `bash custom/litellm/bin/run_claude_with_proxy.sh`
+- Ensure wrapper script is used: `bash custom/litellm/bin/run-claude-custom.sh`
 - Confirm `ANTHROPIC_BASE_URL` points to local proxy endpoint expected by your wrapper
 
 ## Authentication errors

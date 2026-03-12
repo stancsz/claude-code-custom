@@ -15,8 +15,8 @@ echo "For example:"
 echo "  export OPENAI_API_KEY=sk-..."
 echo "  export ANTHROPIC_API_KEY=sk-ant-..."
 echo ""
-echo "Usage: ./custom/litellm/bin/start-litellm.sh [model]"
-echo "Example: ./custom/litellm/bin/start-litellm.sh gpt-5.3-codex"
+echo "Usage: ./custom/litellm/bin/start-litellm-cli-proxy.sh [model]"
+echo "Example: ./custom/litellm/bin/start-litellm-cli-proxy.sh gpt-5.3-codex"
 echo ""
 
 MODEL=${1:-gpt-5.3-codex}

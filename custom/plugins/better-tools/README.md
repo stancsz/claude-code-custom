@@ -28,7 +28,7 @@ Format:
 ## LiteLLM Integration
 To use this with LiteLLM:
 1. Configure `.env` using `.env.example` as a template.
-2. Run `custom/litellm/bin/start-litellm.sh`.
+2. Run `custom/litellm/bin/start-litellm-cli-proxy.sh`.
 
 ## LiteLLM Skill
 
@@ -37,5 +37,5 @@ This plugin now includes a skill at `skills/litellm-proxy/` for running Claude C
 Typical flow:
 1. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/check_prereqs.sh`
 2. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/start_proxy.sh`
-3. `bash custom/litellm/bin/run_claude_with_proxy.sh [claude args]`
+3. `bash custom/litellm/bin/run-claude-custom.sh [claude args]`
 4. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/stop_proxy.sh`

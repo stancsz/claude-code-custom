@@ -1,5 +1,5 @@
 #!/bin/bash
-export ANTHROPIC_BASE_URL=http://localhost:4000
+export ANTHROPIC_BASE_URL=http://localhost:4001
 # Load optional env file for keys without printing them
 if [ -f "$HOME/.config/claude-code-litellm.env" ]; then
   # shellcheck disable=SC1090

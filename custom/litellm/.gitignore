@@ -1,0 +1,14 @@
+# Local secrets
+config/.env
+
+# Virtual environments
+.venv/
+.venv312/
+
+# Runtime artifacts
+litellm.log
+litellm.pid
+
+# Python cache
+__pycache__/
+*.pyc
