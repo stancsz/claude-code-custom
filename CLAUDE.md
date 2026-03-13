@@ -69,6 +69,11 @@ Preferred options (do not print secret values):
 - User-level fallback:
   - `~/.config/claude-code-litellm.env` with `OPENAI_API_KEY=<your_key>`
 
+Optional provider selection:
+
+- `LITELLM_SOURCE=copilot` to use the GitHub Copilot-backed config
+- `ANTHROPIC_MODEL=deepseek-chat` or `ANTHROPIC_MODEL=qwen-max` to target the added Chinese-model aliases
+
 ### 2) Start LiteLLM (choose one mode)
 
 - Mode A: custom Python proxy on port `4001`

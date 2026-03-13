@@ -18,3 +18,4 @@
 
 - Set `OPENAI_API_KEY` in environment, or provide `custom/litellm/config/.env`
 - Validate that mapped model in `custom/litellm/config/claude_litellm_config.yaml` exists for your provider
+- For GitHub Copilot, check `custom/litellm/litellm.log` for the GitHub device-login code and confirm the token cache under `~/.config/litellm/github_copilot/`

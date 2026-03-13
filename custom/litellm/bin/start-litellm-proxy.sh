@@ -7,6 +7,7 @@ PID_FILE="$ROOT_DIR/litellm.pid"
 LOG_FILE="$ROOT_DIR/litellm.log"
 PORT=4001
 STARTUP_TIMEOUT=20
+SOURCE="${LITELLM_SOURCE:-openai}"
 
 export ANTHROPIC_BASE_URL="http://localhost:${PORT}"
 
@@ -49,6 +50,7 @@ fi
 if [ -n "$existing_pid" ]; then
   echo "$existing_pid" > "$PID_FILE"
   echo "LiteLLM is already listening on port $PORT with PID $existing_pid"
+  echo "LiteLLM source: $SOURCE"
   exit 0
 fi
 
@@ -80,7 +82,11 @@ for _ in $(seq 1 "$STARTUP_TIMEOUT"); do
     if [ -n "$listener_pid" ]; then
       echo "$listener_pid" > "$PID_FILE"
       echo "LiteLLM started on port $PORT with PID $listener_pid"
+      echo "LiteLLM source: $SOURCE"
       echo "Log file: $LOG_FILE"
+      if [ "$SOURCE" = "copilot" ] || [ "$SOURCE" = "github_copilot" ]; then
+        echo "If this is the first Copilot run, tail the log to complete GitHub device authentication."
+      fi
       exit 0
     fi
   elif kill -0 "$LITELLM_PID" 2>/dev/null; then

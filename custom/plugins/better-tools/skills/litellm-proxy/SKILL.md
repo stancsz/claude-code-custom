@@ -46,4 +46,6 @@ Use this skill to run Claude Code through a local LiteLLM proxy that maps Claude
 
 - Proxy listens on `http://localhost:4001`.
 - Wrapper script sets `ANTHROPIC_BASE_URL=http://localhost:4001` for Claude compatibility and starts the proxy if it is not already listening.
+- Set `LITELLM_SOURCE=copilot` to route Claude-family models through GitHub Copilot.
+- Set `ANTHROPIC_MODEL=deepseek-chat` or `ANTHROPIC_MODEL=qwen-max` to target the added Chinese model aliases.
 - For troubleshooting, read `references/troubleshooting.md`.

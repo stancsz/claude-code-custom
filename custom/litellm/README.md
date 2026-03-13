@@ -54,7 +54,37 @@ The launcher stores the proxy PID in `custom/litellm/litellm.pid` and writes log
 ## Configuration
 
 - `config/claude_litellm_config.yaml`: maps Claude models to a target OpenAI model (default: `openai/gpt-5.4`).
+- `config/claude_litellm_copilot_config.yaml`: routes Claude-family requests to `github_copilot/*`.
 - `config/.env.example`: template for environment variables.
+
+### Provider Selection
+
+- Default source: `LITELLM_SOURCE=openai`
+- GitHub Copilot source: `LITELLM_SOURCE=copilot`
+- Explicit config override: `LITELLM_CONFIG_PATH=/absolute/path/to/config.yaml`
+
+### GitHub Copilot
+
+- Set `LITELLM_SOURCE=copilot` before starting the proxy or wrapper.
+- On first use, LiteLLM will trigger GitHub Copilot device authentication and cache tokens under `~/.config/litellm/github_copilot/` unless `GITHUB_COPILOT_TOKEN_DIR` is set.
+- The Copilot config also exposes explicit aliases such as `copilot-gpt-5.2`, `copilot-gpt-5.2-codex`, and `copilot-claude-opus-4.5`.
+
+### Chinese Models
+
+These aliases are available in the default config and can be selected by setting `ANTHROPIC_MODEL` before running Claude Code:
+
+- `deepseek-chat`
+- `deepseek-reasoner`
+- `qwen-max`
+- `qwen-plus`
+- `qwen-turbo`
+
+Example:
+
+```bash
+export ANTHROPIC_MODEL=deepseek-chat
+./custom/litellm/bin/run-claude-custom.sh
+```
 
 ## Tracking
 
