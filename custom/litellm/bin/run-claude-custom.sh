@@ -30,6 +30,14 @@ if [ -z "${OPENAI_API_KEY:-}" ] && [ -n "${openai_api_key:-}" ]; then
   export OPENAI_API_KEY="$openai_api_key"
 fi
 
+SOURCE="${LITELLM_SOURCE:-openai}"
+if [ "$SOURCE" = "copilot" ] || [ "$SOURCE" = "github_copilot" ]; then
+  export ANTHROPIC_MODEL="${ANTHROPIC_MODEL:-claude-sonnet-4-6}"
+  export ANTHROPIC_DEFAULT_SONNET_MODEL="${ANTHROPIC_DEFAULT_SONNET_MODEL:-claude-sonnet-4-6}"
+  export ANTHROPIC_DEFAULT_OPUS_MODEL="${ANTHROPIC_DEFAULT_OPUS_MODEL:-claude-opus-4-5}"
+  export ANTHROPIC_DEFAULT_HAIKU_MODEL="${ANTHROPIC_DEFAULT_HAIKU_MODEL:-gpt-5.2}"
+fi
+
 if ! command -v lsof >/dev/null 2>&1 || ! lsof -iTCP:"$PORT" -sTCP:LISTEN -n -P >/dev/null 2>&1; then
   bash "$SCRIPT_DIR/start-litellm-proxy.sh"
 fi

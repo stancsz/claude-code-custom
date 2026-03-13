@@ -11,6 +11,10 @@ SOURCE="${LITELLM_SOURCE:-openai}"
 
 export ANTHROPIC_BASE_URL="http://localhost:${PORT}"
 
+latest_copilot_auth_line() {
+  grep -E 'Please visit https://github.com/login/device and enter code ' "$LOG_FILE" 2>/dev/null | tail -n 1 || true
+}
+
 # Load env from config folder first, then user-level fallback.
 if [ -f "$ROOT_DIR/config/.env" ]; then
   # shellcheck disable=SC1090
@@ -30,9 +34,12 @@ if [ -z "${OPENAI_API_KEY:-}" ] && [ -n "${openai_api_key:-}" ]; then
 fi
 export OPENAI_API_KEY
 
-if [ -z "${OPENAI_API_KEY:-}" ]; then
-  echo "OPENAI_API_KEY is not set. Configure custom/litellm/config/.env or export it in your shell."
-  exit 1
+if [ "$SOURCE" = "copilot" ] || [ "$SOURCE" = "github_copilot" ]; then
+  echo "Starting LiteLLM with GitHub Copilot source."
+  echo "GitHub Copilot authentication will be requested on first model use if no cached token is present."
+elif [ -z "${OPENAI_API_KEY:-}" ] && [ -z "${DEEPSEEK_API_KEY:-}" ] && [ -z "${DASHSCOPE_API_KEY:-}" ]; then
+  echo "Warning: no provider API keys detected in environment."
+  echo "Set OPENAI_API_KEY, DEEPSEEK_API_KEY, DASHSCOPE_API_KEY, or switch to LITELLM_SOURCE=copilot."
 fi
 
 PYTHON_BIN="python3"
@@ -57,8 +64,20 @@ fi
 if [ -f "$PID_FILE" ]; then
   stale_pid="$(cat "$PID_FILE" 2>/dev/null || true)"
   if [ -n "$stale_pid" ] && kill -0 "$stale_pid" 2>/dev/null; then
-    echo "LiteLLM PID file exists and process $stale_pid is still running."
-    exit 0
+    if [ "$SOURCE" = "copilot" ] || [ "$SOURCE" = "github_copilot" ]; then
+      auth_line="$(latest_copilot_auth_line)"
+      if [ -n "$auth_line" ]; then
+        echo "LiteLLM process $stale_pid is running but waiting for GitHub Copilot authentication."
+        echo "$auth_line"
+        echo "Complete the device flow, then rerun this command."
+        exit 1
+      fi
+    fi
+
+    echo "LiteLLM process $stale_pid is running but not listening on port $PORT."
+    echo "Stopping the stale process and retrying startup."
+    kill "$stale_pid" 2>/dev/null || true
+    sleep 1
   fi
   rm -f "$PID_FILE"
 fi
@@ -101,6 +120,17 @@ for _ in $(seq 1 "$STARTUP_TIMEOUT"); do
 
   sleep 1
 done
+
+if [ "$SOURCE" = "copilot" ] || [ "$SOURCE" = "github_copilot" ]; then
+  auth_line="$(latest_copilot_auth_line)"
+  if [ -n "$auth_line" ]; then
+    echo "GitHub Copilot authentication is required before the gateway can finish starting."
+    echo "$auth_line"
+    echo "Complete the device flow, then rerun this command."
+    rm -f "$PID_FILE"
+    exit 1
+  fi
+fi
 
 echo "LiteLLM failed to start on port $PORT"
 if [ -s "$LOG_FILE" ]; then
