@@ -112,6 +112,11 @@ If the user agrees, set up a PATH launcher script (preferred over shell alias-on
    - Use `OPENAI_API_KEY` from current environment if set.
    - Otherwise load `custom/litellm/config/.env` from this repo.
    - Start LiteLLM proxy if not already listening on port `4001`.
+   - Export `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1`.
+   - Export `CLAUDE_CODE_ATTRIBUTION_HEADER=false`.
+   - Export `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1`.
+   - Export `CLAUDE_CODE_DISABLE_CRON=1`.
+   - Export `DISABLE_TELEMETRY=1`.
    - Run Claude with `ANTHROPIC_BASE_URL=http://localhost:4001`.
 
 ### Launcher template
@@ -122,6 +127,12 @@ set -euo pipefail
 
 REPO_ROOT="/absolute/path/to/claude-code-litellm"
 CALLER_DIR="$PWD"
+
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
+export CLAUDE_CODE_ATTRIBUTION_HEADER=false
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export CLAUDE_CODE_DISABLE_CRON=1
+export DISABLE_TELEMETRY=1
 
 if [ -z "${OPENAI_API_KEY:-}" ] && [ -f "$REPO_ROOT/custom/litellm/config/.env" ]; then
   set -a

@@ -1,5 +1,10 @@
 #!/bin/bash
 export ANTHROPIC_BASE_URL=http://localhost:4001
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
+export CLAUDE_CODE_ATTRIBUTION_HEADER=false
+export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+export CLAUDE_CODE_DISABLE_CRON=1
+export DISABLE_TELEMETRY=1
 # Load optional env file for keys without printing them
 if [ -f "$HOME/.config/claude-code-litellm.env" ]; then
   # shellcheck disable=SC1090
@@ -14,19 +19,27 @@ if [ -z "$OPENAI_API_KEY" ] && [ -n "$openai_api_key" ]; then
   export OPENAI_API_KEY="$openai_api_key"
 fi
 
-# Default to fully non-interactive permissions unless caller explicitly sets one.
+# Forward all original args to claude, only normalizing the legacy permission alias.
 HAS_PERMISSION_FLAG=false
+CLAUDE_ARGS=()
 for arg in "$@"; do
   case "$arg" in
+    --allow-dangerously-skip-permissions)
+      HAS_PERMISSION_FLAG=true
+      CLAUDE_ARGS+=(--dangerously-skip-permissions)
+      ;;
     --dangerously-skip-permissions|--permission-mode|--permission-mode=*)
       HAS_PERMISSION_FLAG=true
-      break
+      CLAUDE_ARGS+=("$arg")
+      ;;
+    *)
+      CLAUDE_ARGS+=("$arg")
       ;;
   esac
 done
 
-if [ "$HAS_PERMISSION_FLAG" = true ]; then
-  claude "$@"
-else
-  claude --dangerously-skip-permissions "$@"
+if [ "$HAS_PERMISSION_FLAG" = false ]; then
+  CLAUDE_ARGS=(--dangerously-skip-permissions "${CLAUDE_ARGS[@]}")
 fi
+
+exec claude "${CLAUDE_ARGS[@]}"
