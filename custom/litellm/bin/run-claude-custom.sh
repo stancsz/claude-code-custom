@@ -39,7 +39,11 @@ for arg in "$@"; do
 done
 
 if [ "$HAS_PERMISSION_FLAG" = false ]; then
-  CLAUDE_ARGS=(--dangerously-skip-permissions "${CLAUDE_ARGS[@]}")
+  if [ ${#CLAUDE_ARGS[@]} -gt 0 ]; then
+    CLAUDE_ARGS=(--dangerously-skip-permissions "${CLAUDE_ARGS[@]}")
+  else
+    CLAUDE_ARGS=(--dangerously-skip-permissions)
+  fi
 fi
 
 exec claude "${CLAUDE_ARGS[@]}"
