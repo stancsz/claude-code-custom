@@ -16,10 +16,10 @@ echo "  export OPENAI_API_KEY=sk-..."
 echo "  export ANTHROPIC_API_KEY=sk-ant-..."
 echo ""
 echo "Usage: ./custom/litellm/bin/start-litellm-cli-proxy.sh [model]"
-echo "Example: ./custom/litellm/bin/start-litellm-cli-proxy.sh gpt-5.3-codex"
+echo "Example: ./custom/litellm/bin/start-litellm-cli-proxy.sh openai/gpt-5.4"
 echo ""
 
-MODEL=${1:-gpt-5.3-codex}
+MODEL=${1:-openai/gpt-5.4}
 
 echo "Proxying to model: $MODEL"
 echo "You can now run 'claude' in another terminal."

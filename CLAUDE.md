@@ -77,7 +77,7 @@ Preferred options (do not print secret values):
 
 - Mode B: LiteLLM CLI proxy on port `4000` (wrapper-compatible)
   - `bash custom/litellm/bin/start-litellm-cli-proxy.sh [model]`
-  - Example: `bash custom/litellm/bin/start-litellm-cli-proxy.sh gpt-5.3-codex`
+  - Example: `bash custom/litellm/bin/start-litellm-cli-proxy.sh openai/gpt-5.4`
 
 ### 3) Start Claude Code with proxy
 

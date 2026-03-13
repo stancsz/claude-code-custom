@@ -19,6 +19,34 @@ class FixOpenAIRequests(CustomLogger):
         ):
             data["max_output_tokens"] = 16
 
+        # OpenAI responses API rejects long user identifiers.
+        if "user" in data and isinstance(data["user"], str) and len(data["user"]) > 64:
+            data["user"] = data["user"][:64]
+
+        # Normalize tool definitions for OpenAI responses API.
+        if "tools" in data and isinstance(data["tools"], list):
+            normalized_tools = []
+
+            for tool in data["tools"]:
+                if not isinstance(tool, dict):
+                    continue
+
+                normalized_tool = dict(tool)
+                function_def = normalized_tool.get("function")
+
+                if (
+                    "name" not in normalized_tool
+                    and isinstance(function_def, dict)
+                    and isinstance(function_def.get("name"), str)
+                    and function_def.get("name")
+                ):
+                    normalized_tool["name"] = function_def["name"]
+
+                if isinstance(normalized_tool.get("name"), str) and normalized_tool["name"]:
+                    normalized_tools.append(normalized_tool)
+
+            data["tools"] = normalized_tools
+
         # Keep only tool messages with a matching assistant tool_call id.
         if "messages" in data:
             messages = data["messages"]
