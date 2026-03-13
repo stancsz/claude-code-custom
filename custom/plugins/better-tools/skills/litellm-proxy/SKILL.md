@@ -11,7 +11,7 @@ Use this skill to run Claude Code through a local LiteLLM proxy that maps Claude
 ## What This Skill Does
 
 - Start a local proxy server via `custom/litellm/bin/start-litellm-proxy.sh`
-- Configure Claude Code invocation via `custom/litellm/bin/run-claude-custom.sh`
+- Configure Claude Code invocation via `custom/litellm/bin/run-claude-custom.sh` with proxy auto-start
 - Stop the local proxy via `custom/litellm/bin/stop-litellm-proxy.sh`
 - Check proxy status via `scripts/status_proxy.sh`
 
@@ -29,15 +29,15 @@ Use this skill to run Claude Code through a local LiteLLM proxy that maps Claude
 1. Validate readiness:
    - Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/check_prereqs.sh`
 
-2. Start proxy:
-   - Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/start_proxy.sh`
-
-3. Verify proxy health:
-   - Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/status_proxy.sh`
-
-4. Run Claude Code through proxy:
+2. Run Claude Code through proxy:
    - Run `bash custom/litellm/bin/run-claude-custom.sh [claude args]`
    - Example: `bash custom/litellm/bin/run-claude-custom.sh -p "hello"`
+
+3. Start proxy manually when needed:
+   - Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/start_proxy.sh`
+
+4. Verify proxy health:
+   - Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/status_proxy.sh`
 
 5. Stop proxy when done:
    - Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/stop_proxy.sh`
@@ -45,5 +45,5 @@ Use this skill to run Claude Code through a local LiteLLM proxy that maps Claude
 ## Notes
 
 - Proxy listens on `http://localhost:4001`.
-- Wrapper script sets `ANTHROPIC_BASE_URL=http://localhost:4001` for Claude compatibility.
+- Wrapper script sets `ANTHROPIC_BASE_URL=http://localhost:4001` for Claude compatibility and starts the proxy if it is not already listening.
 - For troubleshooting, read `references/troubleshooting.md`.

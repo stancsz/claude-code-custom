@@ -1,12 +1,23 @@
 #!/bin/bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PORT=4001
+
 export ANTHROPIC_BASE_URL=http://localhost:4001
 export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 export CLAUDE_CODE_ATTRIBUTION_HEADER=false
 export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 export CLAUDE_CODE_DISABLE_CRON=1
 export DISABLE_TELEMETRY=1
-# Load optional env file for keys without printing them
-if [ -f "$HOME/.config/claude-code-litellm.env" ]; then
+# Load project env first, then user-level fallback.
+if [ -f "$ROOT_DIR/config/.env" ]; then
+  # shellcheck disable=SC1090
+  set -a
+  . "$ROOT_DIR/config/.env"
+  set +a
+elif [ -f "$HOME/.config/claude-code-litellm.env" ]; then
   # shellcheck disable=SC1090
   set -a
   . "$HOME/.config/claude-code-litellm.env"
@@ -15,8 +26,12 @@ fi
 # Avoid CLI auth conflict; proxy handles auth via OPENAI_API_KEY
 unset ANTHROPIC_API_KEY
 # Prefer explicit OPENAI_API_KEY, otherwise fall back to openai_api_key
-if [ -z "$OPENAI_API_KEY" ] && [ -n "$openai_api_key" ]; then
+if [ -z "${OPENAI_API_KEY:-}" ] && [ -n "${openai_api_key:-}" ]; then
   export OPENAI_API_KEY="$openai_api_key"
+fi
+
+if ! command -v lsof >/dev/null 2>&1 || ! lsof -iTCP:"$PORT" -sTCP:LISTEN -n -P >/dev/null 2>&1; then
+  bash "$SCRIPT_DIR/start-litellm-proxy.sh"
 fi
 
 # Forward all original args to claude, only normalizing the legacy permission alias.

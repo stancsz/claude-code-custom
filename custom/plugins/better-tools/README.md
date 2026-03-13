@@ -36,6 +36,6 @@ This plugin now includes a skill at `skills/litellm-proxy/` for running Claude C
 
 Typical flow:
 1. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/check_prereqs.sh`
-2. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/start_proxy.sh`
-3. `bash custom/litellm/bin/run-claude-custom.sh [claude args]`
+2. `bash custom/litellm/bin/run-claude-custom.sh [claude args]`
+3. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/start_proxy.sh` if you want the proxy up before running Claude or want to inspect logs
 4. `bash ${CLAUDE_PLUGIN_ROOT}/skills/litellm-proxy/scripts/stop_proxy.sh`

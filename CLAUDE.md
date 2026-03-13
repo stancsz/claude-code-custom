@@ -86,6 +86,7 @@ Preferred options (do not print secret values):
 
 - If using Mode A (port `4001`), run Claude directly:
   - `ANTHROPIC_BASE_URL=http://localhost:4001 claude [args]`
+  - Or use `bash custom/litellm/bin/run-claude-custom.sh [args]`, which auto-starts the proxy if needed
 
 ### 4) Stop proxy
 

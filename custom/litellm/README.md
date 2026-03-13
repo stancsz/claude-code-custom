@@ -30,12 +30,7 @@ This folder contains custom LiteLLM integration files for Claude Code.
 
 ## Usage
 
-1. Start the proxy:
-   ```bash
-   ./custom/litellm/bin/start-litellm-proxy.sh
-   ```
-
-2. Run Claude Code:
+1. Run Claude Code through the wrapper. It auto-starts the proxy on port `4001` if needed:
    ```bash
    ./custom/litellm/bin/run-claude-custom.sh [arguments]
    ```
@@ -44,10 +39,17 @@ This folder contains custom LiteLLM integration files for Claude Code.
    ./custom/litellm/bin/run-claude-custom.sh -p "Hello world"
    ```
 
+2. Start the proxy manually if you want to inspect logs or keep it running before invoking Claude:
+   ```bash
+   ./custom/litellm/bin/start-litellm-proxy.sh
+   ```
+
 3. Stop the proxy:
    ```bash
    ./custom/litellm/bin/stop-litellm-proxy.sh
    ```
+
+The launcher stores the proxy PID in `custom/litellm/litellm.pid` and writes logs to `custom/litellm/litellm.log`.
 
 ## Configuration
 
