@@ -10,27 +10,22 @@
 .PARAMETER Backend
     Specifies the container backend to use. Valid values are 'docker' or 'podman'.
 
+.PARAMETER Rebuild
+    If set, removes the existing container before starting.
+
 .EXAMPLE
     .\Script\run_devcontainer_claude_code.ps1 -Backend docker
     Uses Docker as the container backend.
-
-.EXAMPLE
-    .\Script\run_devcontainer_claude_code.ps1 -Backend podman
-    Uses Podman as the container backend.
-
-.NOTES
-    Project Structure:
-    Project/
-    ├── .devcontainer/
-    └── Script/
-        └── run_devcontainer_claude_code.ps1
 #>
 
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [ValidateSet('docker','podman')]
-    [string]$Backend
+    [string]$Backend,
+    
+    [Parameter(Mandatory=$false)]
+    [switch]$Rebuild
 )
 
 # Notify script start
@@ -108,6 +103,9 @@ if ($Backend -eq 'podman') {
 Write-Host "Bringing up DevContainer in the current folder..."
 try {
     $arguments = @('up', '--workspace-folder', '.')
+    if ($Rebuild) {
+        $arguments += '--remove-existing-container'
+    }
     if ($Backend -eq 'podman') {
         $arguments += '--docker-path', 'podman'
     }
@@ -120,30 +118,42 @@ try {
 
 # --- Step 4: Get DevContainer ID ---
 Write-Host "Finding the DevContainer ID..."
-$currentFolder = (Get-Location).Path
+# Calculate project root from script location (Script/run_devcontainer_claude_code.ps1)
+$currentScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$customDir = Split-Path -Parent $currentScriptDir
+$projectRoot = Split-Path -Parent $customDir
+$targetFolder = $projectRoot
 
 try {
-    $containerId = (& $Backend ps --filter "label=devcontainer.local_folder=$currentFolder" --format '{{.ID}}').Trim()
+    $containerId = (& $Backend ps --filter "label=devcontainer.local_folder=$targetFolder" --format '{{.ID}}' | Select-Object -First 1).Trim()
 } catch {
-    $displayCommand = "$Backend ps --filter `"label=devcontainer.local_folder=$currentFolder`" --format '{{.ID}}'"
+    $displayCommand = "$Backend ps --filter `"label=devcontainer.local_folder=$targetFolder`" --format '{{.ID}}'"
     Write-Error "Failed to get container ID (Command: $displayCommand): $($_.Exception.Message)"
     exit 1
 }
 
 if (-not $containerId) {
-    Write-Error "Could not find DevContainer ID for the current folder ('$currentFolder')."
+    Write-Error "Could not find DevContainer ID for the current folder ('$targetFolder')."
     Write-Error "Please check if 'devcontainer up' was successful and the container is running."
     exit 1
 }
 Write-Host "Found container ID: $containerId"
 
 # --- Step 5 & 6: Execute command and enter interactive shell inside container ---
-Write-Host "Executing 'claude' command and then starting zsh session inside container $($containerId)..."
+Write-Host "Executing 'claude' command (Native DeepSeek) and then starting zsh session inside container $($containerId)..."
 try {
-    & $Backend exec -it $containerId zsh -c 'claude; exec zsh'
+    # Bypass onboarding by seeding the config file directly using base64 to avoid quote issues
+    $settingsJson = '{"theme":"dark","onboardingStatus":"completed","lastAppVersion":"2.1.76"}'
+    $settingsB64 = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($settingsJson))
+    $setupConfig = "mkdir -p ~/.claude && echo '$settingsB64' | base64 -d > ~/.claude/settings.json"
+    
+    # Final command: Setup config, load .env, then run claude directly
+    $command = "$setupConfig; set -a; [ -f /workspace/.env ] && . /workspace/.env; set +a; claude; exec zsh"
+    
+    & $Backend exec -it $containerId zsh -c $command
     Write-Host "Interactive session ended."
 } catch {
-    $displayCommand = "$Backend exec -it $containerId zsh -c 'claude; exec zsh'"
+    $displayCommand = "$Backend exec -it $containerId zsh -c '$command'"
     Write-Error "Failed to execute command inside container (Command: $displayCommand): $($_.Exception.Message)"
     exit 1
 }
